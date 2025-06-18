@@ -1,0 +1,25 @@
+
+#ifndef ASN1_DATA_H
+#define ASN1_DATA_H
+
+typedef enum {
+    TAG_UNDEFINED = 0x00,
+    TAG_BOOLEAN = 0x01,
+    TAG_INTEGER = 0x02,
+    TAG_BIT_STRING = 0x03,
+    TAG_OCTET_STRING = 0x04,
+    TAG_NULL = 0x05,
+    TAG_OBJECT_ID = 0x06,
+    TAG_PRINTABLE_STRING = 0x13,
+    TAG_T61_STRING = 0x14,
+    TAG_IA5_STRING = 0x16,
+    TAG_UTC_TIME = 0x17,
+    TAG_SEQUENCE = 0x30,
+    TAG_SET = 0x31
+} Tag;
+
+#define INDETERMINATE_LENGTH -1
+
+
+
+#endif
