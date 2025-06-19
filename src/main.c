@@ -31,12 +31,11 @@ int main(int argc, char *argv[]){
             visualize_parse_tree(&parseTree);
 
             FILE *out = fopen("test.json", "w");
-            if(out == NULL){
+            if(out == NULL || build_json(&parseTree, out)){
                 fprintf(stderr, "[ERROR] Unable to create json file '%s' for PEM file '%s'.\n", "test.json", argv[i]);
                 continue;
             }
-            build_json(&parseTree, out);
-            
+
             free_parse_tree(&parseTree);
             printf("\nParsed: %s\n\n", argv[i]);
         }
