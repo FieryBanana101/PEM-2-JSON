@@ -2,14 +2,16 @@
 #ifndef PARSE_TREE_H
 #define PARSE_TREE_H
 
+#include <stdint.h>
+
 #include <asn1-data.h>
 
 typedef struct Node {
     Tag tag;
-    ssize_t length;
+    uint32_t length;
     uint8_t *content;
-    ssize_t childNum;
-    ssize_t childCapacity;
+    uint32_t childNum;
+    uint32_t childCapacity;
     struct Node **children;
 } ParseTreeNode;
 
@@ -24,7 +26,7 @@ void free_parse_tree(ParseTree *parseTree);
 
 void visualize_parse_tree(ParseTree *parseTree);
 
-ParseTreeNode *create_node(Tag tag, ssize_t length);
+ParseTreeNode *create_node(Tag tag, uint32_t length);
 
 uint8_t append_children_node(ParseTreeNode *parent, ParseTreeNode *child);
 

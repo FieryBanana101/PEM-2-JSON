@@ -10,7 +10,7 @@ extern uint32_t base64_value[];
 
 void base64_value_init(void);
 
-ssize_t base64_decode(char *encoded, uint8_t *decoded);
+uint32_t base64_decode(char *encoded, uint8_t *decoded);
 
 uint8_t parse_pem(FILE *file, ParseTree *parseTree);
 

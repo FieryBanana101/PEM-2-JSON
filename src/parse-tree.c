@@ -5,7 +5,7 @@
 
 #include <parse-tree.h>
 
-ParseTreeNode *create_node(Tag tag, ssize_t length){
+ParseTreeNode *create_node(Tag tag, uint32_t length){
     
     ParseTreeNode *node = (ParseTreeNode *) malloc(sizeof(ParseTreeNode));
 
@@ -25,7 +25,7 @@ ParseTreeNode *create_node(Tag tag, ssize_t length){
 uint8_t append_children_node(ParseTreeNode *parent, ParseTreeNode *child){
     
     if(parent->childNum == parent->childCapacity){
-        ssize_t newCapacity = (parent->childCapacity == 0 ? 1 : parent->childCapacity * 2);
+        uint32_t newCapacity = (parent->childCapacity == 0 ? 1 : parent->childCapacity * 2);
         ParseTreeNode **new = realloc(parent->children, newCapacity * sizeof(ParseTreeNode));
         if(new == NULL){
             fprintf(stderr, "[ERROR] Failed to re-allocate children.\n");
@@ -55,8 +55,8 @@ uint8_t init_parse_tree(ParseTree *parseTree){
 
 static void do_free_parse_tree(ParseTreeNode *curr){
 
-    ssize_t n = curr->childNum;
-    for(ssize_t i = 0; i < n; i++){
+    uint32_t n = curr->childNum;
+    for(uint32_t i = 0; i < n; i++){
         do_free_parse_tree(curr->children[i]);
     }
     free(curr->content);
@@ -71,8 +71,8 @@ void free_parse_tree(ParseTree *parseTree){
 }
 
 
-static void do_visualize_parse_tree(ParseTreeNode *curr, ssize_t depth){
-    for(ssize_t i = 0; i < depth; i++){
+static void do_visualize_parse_tree(ParseTreeNode *curr, uint32_t depth){
+    for(uint32_t i = 0; i < depth; i++){
         printf("--");
     }
 
@@ -80,26 +80,26 @@ static void do_visualize_parse_tree(ParseTreeNode *curr, ssize_t depth){
         printf("Tag: 0x%.2x, Length: INF", curr->tag);
     }
     else{
-        printf("Tag: 0x%.2x, Length: %ld", curr->tag, curr->length);
+        printf("Tag: 0x%.2x, Length: %d", curr->tag, curr->length);
     }
 
-    if(curr->childNum == 0){
+    if(curr->tag & (1 << 5)){   // Composite type
+        printf("\n");
+        uint32_t n = (curr->childNum);
+        for(uint32_t i = 0; i < n; i++){
+            do_visualize_parse_tree(curr->children[i], depth + 1);
+        }
+    }
+    else{  // Primitive type
         printf(", content: ");
-        ssize_t n = (curr->length);
-        for(ssize_t i = 0; i < n; i++){
+        uint32_t n = (curr->length);
+        for(uint32_t i = 0; i < n; i++){
             printf("0x%.2x ", curr->content[i]);
         }
         printf("\n");
     }
-    else{
-        printf("\n");
-        ssize_t n = (curr->childNum);
-        for(ssize_t i = 0; i < n; i++){
-            do_visualize_parse_tree(curr->children[i], depth + 1);
-        }
-    }
 }
 
 void visualize_parse_tree(ParseTree *parseTree){
-    do_visualize_parse_tree(parseTree->root, 0);
+    do_visualize_parse_tree(parseTree->root->children[0], 0);
 }

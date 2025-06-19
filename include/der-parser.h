@@ -10,6 +10,6 @@
 
 #define MAX_DER_FILE_SIZE 10000
 
-uint8_t parse_der(uint8_t *der, ssize_t der_size, ParseTree *parseTree);
+uint8_t parse_der(uint8_t *der, uint32_t der_size, ParseTree *parseTree);
 
 #endif

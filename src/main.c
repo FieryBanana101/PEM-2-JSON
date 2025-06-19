@@ -3,6 +3,7 @@
 
 #include <pem-parser.h>
 #include <der-parser.h>
+#include <build-json.h>
 
 
 int main(int argc, char *argv[]){
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]){
 
     base64_value_init();
 
-    for(ssize_t i = 1; i < argc; i++){
+    for(uint32_t i = 1; i < argc; i++){
         FILE *file = fopen(argv[i], "r");
         if(file == NULL){
             fprintf(stderr, "[ERROR] File %s does not exist.\n", argv[i]);
@@ -29,8 +30,14 @@ int main(int argc, char *argv[]){
             printf("\n");
             visualize_parse_tree(&parseTree);
 
+            FILE *out = fopen("test.json", "w");
+            if(out == NULL){
+                fprintf(stderr, "[ERROR] Unable to create json file '%s' for PEM file '%s'.\n", "test.json", argv[i]);
+                continue;
+            }
+            build_json(&parseTree, out);
+            
             free_parse_tree(&parseTree);
-
             printf("\nParsed: %s\n\n", argv[i]);
         }
     }
