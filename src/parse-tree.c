@@ -75,12 +75,15 @@ static void do_visualize_parse_tree(ParseTreeNode *curr, uint32_t depth, FILE *f
     for(uint32_t i = 0; i < depth; i++){
         fprintf(file, "──");
     }
+    if(depth > 0) fprintf(file, " ");
 
+    char parsedTag[MAX_PARSED_TAG_SIZE];
+    parse_tag_type(curr->tag, parsedTag);
     if(curr->length == INDETERMINATE_LENGTH){
-        fprintf(file, " Tag: 0x%.2x, Length: INF", curr->tag);
+        fprintf(file, "Tag: 0x%.2x (%s), Length: INF", curr->tag, parsedTag);
     }
     else{
-        fprintf(file, " Tag: 0x%.2x, Length: %d", curr->tag, curr->length);
+        fprintf(file, "Tag: 0x%.2x (%s), Length: %d", curr->tag, parsedTag, curr->length);
     }
 
     if(curr->tag & (1 << 5)){   // Composite type

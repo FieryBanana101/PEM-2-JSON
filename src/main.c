@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[]){
     if(argc < 3 || argc > 4){
-        fprintf(stderr, "[ERROR] Invalid usage.\nUsage: ./pem2json --tree <in> <out>...\nUsage: ./pem2json --json <in> <out>...\n<in> : input PEM file\n<out> : optional output file\n\nConvert PEM formatted file into JSON or its tree representation\n");
+        fprintf(stderr, "[ERROR] Invalid usage.\n\nUsage:\n   ./pem2json --tree <in> <out>\nUsage:\n   ./pem2json --json <in> <out>\n<in> : input PEM file\n<out> : optional output file\n\nConvert PEM formatted file into JSON or its tree representation\nUse '--tree' to visualize the parse tree or '--json' to visualize JSON structure\n\n");
         return 1;
     }
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
         visualJson = 0;
     }
     else{
-        fprintf(stderr, "[ERROR] Invalid usage.\n\nUsage:\n   ./pem2json --tree <in> <out>\nUsage:\n   ./pem2json --json <in> <out>\n<in> : input PEM file\n<out> : optional output file\n\nConvert PEM formatted file into JSON or its tree representation\nUse '--tree' to visualize the parse tree and '--json' to visualize JSON structure\n\n");
+        fprintf(stderr, "[ERROR] Invalid usage.\n\nUsage:\n   ./pem2json --tree <in> <out>\nUsage:\n   ./pem2json --json <in> <out>\n<in> : input PEM file\n<out> : optional output file\n\nConvert PEM formatted file into JSON or its tree representation\nUse '--tree' to visualize the parse tree or '--json' to visualize JSON structure\n\n");
         return 1;
     }
 

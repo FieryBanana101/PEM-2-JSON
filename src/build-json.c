@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <string.h>
 
-static uint8_t parse_value(Tag tag, uint32_t length, uint8_t *value, char *parsedTag, char *parsedValue){
+uint8_t parse_value(Tag tag, uint32_t length, uint8_t *value, char *parsedTag, char *parsedValue){
 
     if(parse_tag_type(tag, parsedTag)) return 1;
 
