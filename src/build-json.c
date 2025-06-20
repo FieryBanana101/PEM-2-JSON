@@ -45,7 +45,7 @@ uint8_t parse_value(Tag tag, uint32_t length, uint8_t *value, char *parsedTag, c
     }
 }
 
-static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth){
+static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth, uint32_t *id){
 
     char buffer[MAX_JSON_SIZE], temp[MAX_JSON_SIZE], parsedTag[MAX_PARSED_TAG_SIZE], parsedValue[MAX_PARSED_VALUE_SIZE];
     buffer[0] = '\0';
@@ -61,7 +61,7 @@ static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth){
 
         if(depth > 0){
             if(parse_tag_type(curr->tag, parsedTag)) return 1;
-            sprintf(temp, "\"%s\" : ", parsedTag);
+            sprintf(temp, "\"%s %d\" : ", parsedTag, *id); (*id)++;
             strcat(buffer, temp);
         }
         strcat(buffer, "{\n");
@@ -72,7 +72,7 @@ static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth){
 
         uint32_t n = curr->childNum;
         for(uint32_t i = 0; i < n; i++){
-            if(do_build_json(curr->children[i], file, depth + 1)) return 1;
+            if(do_build_json(curr->children[i], file, depth + 1, id)) return 1;
 
             if(i < n - 1){
                 fputs(",\n", file);
@@ -99,7 +99,7 @@ static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth){
         }
         
         if(parse_value(curr->tag, curr->length, curr->content, parsedTag, parsedValue)) return 1;
-        sprintf(temp, "\"%s\" : %s", parsedTag, parsedValue);
+        sprintf(temp, "\"%s %d\" : %s", parsedTag, *id, parsedValue); (*id)++;
         strcat(buffer, temp);
         if(depth == 0){
             strcat(buffer, " }");
@@ -117,5 +117,6 @@ static uint8_t do_build_json(ParseTreeNode *curr, FILE *file, uint32_t depth){
 
 
 uint8_t build_json(ParseTree *parseTree, FILE *file){
-    return do_build_json(parseTree->root->children[0], file, 0);
+    uint32_t id = 0;
+    return do_build_json(parseTree->root->children[0], file, 0, &id);
 }
