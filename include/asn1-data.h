@@ -26,6 +26,7 @@ typedef enum {
 
 #define MAX_PARSED_TAG_SIZE 30
 #define MAX_PARSED_VALUE_SIZE 10000
+#define MAX_INTEGER_DIGIT 10000
 
 uint8_t parse_tag_type(Tag tag, char *parsedTag);
 

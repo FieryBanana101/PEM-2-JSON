@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdint.h>
 
+#include <gmp.h>
+
 uint8_t parse_tag_type(Tag tag, char *parsedTag){
     switch(tag){
         case TAG_SEQUENCE:
@@ -89,13 +91,10 @@ uint8_t parse_boolean(uint8_t *value, uint32_t length, char *parsedValue){
 }
 
 uint8_t parse_integer(uint8_t *value, uint32_t length, char *parsedValue){
-    strcat(parsedValue, "\"");
-    for(uint32_t i = 0; i < length; i++){
-        char hex[3];
-        sprintf(hex, "%.2x", value[i]);
-        strcat(parsedValue, hex);
-    }
-    strcat(parsedValue, "\"");
+    mpz_t num;
+    mpz_init(num);
+    mpz_import(num, length, 1, 1, 1, 0, value);
+    mpz_get_str(parsedValue, 10, num);
     return 0;
 }
 
@@ -105,11 +104,20 @@ uint8_t parse_null(uint8_t *value, uint32_t length, char *parsedValue){
 }
 
 uint8_t parse_object_id(uint8_t *value, uint32_t length, char *parsedValue){
-    strcat(parsedValue, "\"");
-    for(uint32_t i = 0; i < length; i++){
-        char hex[3];
-        sprintf(hex, "%.2x", value[i]);
-        strcat(parsedValue, hex);
+    sprintf(parsedValue, "\"%d.%d", (uint8_t) value[0] / 40, (uint8_t) value[0] % 40);
+    uint32_t sub = 0;
+    for(uint32_t i = 1; i < length; i++){
+        sub <<= 7;
+        if(value[i] & (1 << 7)){
+            sub += (value[i] ^ (1 << 7));
+        }
+        else{
+            sub += value[i];
+            char temp[10];
+            sprintf(temp, ".%d", sub);
+            strcat(parsedValue, temp);
+            sub = 0;
+        }
     }
     strcat(parsedValue, "\"");
     return 0;

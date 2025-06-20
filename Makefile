@@ -5,6 +5,8 @@ CC = gcc
 
 CFLAGS = -g -Wall -Werror -Iinclude
 
+LINKFLAGS = -lgmp
+
 SRCS = $(shell find . -name "*.c")
 
 TARGET = pem2json
@@ -12,7 +14,7 @@ TARGET = pem2json
 all:
 	@echo [Building...]
 	@echo
-	@time -p $(CC) -g $(CFLAGS) $(SRCS) -o $(TARGET)
+	@time -p $(CC) $(CFLAGS) $(SRCS) $(LINKFLAGS) -o $(TARGET)
 	@echo
 	@echo "[Build is done]"
 

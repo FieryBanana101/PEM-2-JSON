@@ -71,35 +71,35 @@ void free_parse_tree(ParseTree *parseTree){
 }
 
 
-static void do_visualize_parse_tree(ParseTreeNode *curr, uint32_t depth){
+static void do_visualize_parse_tree(ParseTreeNode *curr, uint32_t depth, FILE *file){
     for(uint32_t i = 0; i < depth; i++){
-        printf("--");
+        fprintf(file, "──");
     }
 
     if(curr->length == INDETERMINATE_LENGTH){
-        printf("Tag: 0x%.2x, Length: INF", curr->tag);
+        fprintf(file, " Tag: 0x%.2x, Length: INF", curr->tag);
     }
     else{
-        printf("Tag: 0x%.2x, Length: %d", curr->tag, curr->length);
+        fprintf(file, " Tag: 0x%.2x, Length: %d", curr->tag, curr->length);
     }
 
     if(curr->tag & (1 << 5)){   // Composite type
-        printf("\n");
+        fprintf(file, "\n│\n├");
         uint32_t n = (curr->childNum);
         for(uint32_t i = 0; i < n; i++){
-            do_visualize_parse_tree(curr->children[i], depth + 1);
+            do_visualize_parse_tree(curr->children[i], depth + 1, file);
         }
     }
     else{  // Primitive type
-        printf(", content: ");
+        fprintf(file, ", content: 0x");
         uint32_t n = (curr->length);
         for(uint32_t i = 0; i < n; i++){
-            printf("0x%.2x ", curr->content[i]);
+            fprintf(file, "%.2x", curr->content[i]);
         }
-        printf("\n");
+        fprintf(file, "\n│\n├");
     }
 }
 
-void visualize_parse_tree(ParseTree *parseTree){
-    do_visualize_parse_tree(parseTree->root->children[0], 0);
+void visualize_parse_tree(ParseTree *parseTree, FILE *file){
+    do_visualize_parse_tree(parseTree->root->children[0], 0, file);
 }

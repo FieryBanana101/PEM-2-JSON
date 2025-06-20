@@ -2,6 +2,7 @@
 #ifndef PARSE_TREE_H
 #define PARSE_TREE_H
 
+#include <stdio.h>
 #include <stdint.h>
 
 #include <asn1-data.h>
@@ -24,7 +25,7 @@ uint8_t init_parse_tree(ParseTree *parseTree);
 
 void free_parse_tree(ParseTree *parseTree);
 
-void visualize_parse_tree(ParseTree *parseTree);
+void visualize_parse_tree(ParseTree *parseTree, FILE *file);
 
 ParseTreeNode *create_node(Tag tag, uint32_t length);
 
